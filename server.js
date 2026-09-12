@@ -1,25 +1,22 @@
 const express = require("express");
 const cors = require("cors");
 
-const { sequelize } = require("./src/Models/Index");
-
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
+// Importa as rotas
+const ProfileRoutes = require ("./src/Routes/ProfileRoutes")
+
+// Usa as rotas com prefixo
+app.use("/api/profiles", ProfileRoutes);
+
+// Rota raiz em JSON
 app.get("/", (req, res) => {
-  res.json({
-    mensagem: "DevShowcase API funcionando!"
-  });
+  res.json({ message: "Servidor DevShowcase API rodando!" });
 });
 
-sequelize.sync()
-  .then(() => {
-    app.listen(3000, () => {
-      console.log("Servidor rodando na porta 3000");
-    });
-  })
-  .catch((error) => {
-    console.error("Erro ao conectar ao banco:", error);
-  });
+app.listen(3000, () => {
+  console.log("Servidor rodando na porta 3000");
+});
