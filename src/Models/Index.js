@@ -1,35 +1,30 @@
-const sequelize = require("../Database/Connection");
+const { Sequelize, DataTypes } = require("sequelize");
 
-const ProfileModel = require("./Profile");
-const ProjectModel = require("./Project");
-const TechnologyModel = require("./Technology");
-const FeedbackModel = require("./Feedback");
-
-const Profile = ProfileModel(sequelize);
-const Project = ProjectModel(sequelize);
-const Technology = TechnologyModel(sequelize);
-const Feedback = FeedbackModel(sequelize);
-
-// Relacionamentos
-
-Profile.hasMany(Project);
-Project.belongsTo(Profile);
-
-Project.belongsToMany(Technology, {
-  through: "ProjectTechnology"
+// conexão com banco SQLite (arquivo local devshowcase.db)
+const sequelize = new Sequelize({
+  dialect: "sqlite",
+  storage: "devshowcase.db"
 });
 
-Technology.belongsToMany(Project, {
-  through: "ProjectTechnology"
+// modelo Profile
+const Profile = sequelize.define("Profile", {
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  bio: {
+    type: DataTypes.STRING,
+    allowNull: false
+  }
 });
 
-Project.hasMany(Feedback);
-Feedback.belongsTo(Project);
+// sincroniza automaticamente as tabelas
+sequelize.sync()
+  .then(() => {
+    console.log("Banco sincronizado com sucesso!");
+  })
+  .catch((error) => {
+    console.error("Erro ao sincronizar banco:", error);
+  });
 
-module.exports = {
-  sequelize,
-  Profile,
-  Project,
-  Technology,
-  Feedback
-};
+module.exports = { sequelize, Profile };

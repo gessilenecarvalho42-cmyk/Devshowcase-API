@@ -1,22 +1,17 @@
 const express = require("express");
-const cors = require("cors");
-
 const app = express();
+const profileRoutes = require("./src/Routes/ProfileRoutes");
 
-app.use(cors());
 app.use(express.json());
 
-// Importa as rotas
-const ProfileRoutes = require ("./src/Routes/ProfileRoutes")
+// Rotas
+app.use("/api/profiles", profileRoutes);
 
-// Usa as rotas com prefixo
-app.use("/api/profiles", ProfileRoutes);
-
-// Rota raiz em JSON
 app.get("/", (req, res) => {
   res.json({ message: "Servidor DevShowcase API rodando!" });
 });
 
-app.listen(3000, () => {
-  console.log("Servidor rodando na porta 3000");
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`Servidor DevShowcase API rodando na porta ${PORT}`);
 });
