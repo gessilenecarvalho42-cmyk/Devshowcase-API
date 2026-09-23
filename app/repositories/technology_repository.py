@@ -14,4 +14,4 @@ def create_technology(db: Session, tech: TechnologyCreate):
 
 # Busca e lista todas as tecnologias cadastradas
 def get_all_technologies(db: Session):
-    return db.query(Technology).all()
+    return db.query(Technology).order_by(Technology.id).all()

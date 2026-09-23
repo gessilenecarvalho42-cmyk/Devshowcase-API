@@ -25,3 +25,13 @@ def create_technology(
         db=db,
         tech=technology
     )
+
+
+@router.get(
+    "/",
+    response_model=list[TechnologyResponse]
+)
+def list_technologies(
+    db: Session = Depends(get_db)
+):
+    return technology_repository.get_all_technologies(db=db)
