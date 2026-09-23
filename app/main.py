@@ -1,22 +1,51 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, status
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
 from app.database import Base, engine
+from app.models import Profile, Technology, Project, Feedback
 from app.routers import profiles, technologies, projects
 
-# Cria as tabelas no banco de dados SQLite baseadas nos modelos definidos
+
 Base.metadata.create_all(bind=engine)
 
-# Instancia a aplicação FastAPI
+
 app = FastAPI(
     title="DevShowcase API",
-    description="API para gerenciamento de perfis, projetos e tecnologias."
+    description="API REST para gerenciamento de perfis, projetos e tecnologias."
 )
 
-# Rota raiz simples para testar se a API está no ar
-@app.get("/")
-def root():
-    return {"message": "DevShowcase API funcionando!"}
 
-# Inclui as rotas separadas por entidades (Controllers/Endpoints)
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(
+    request: Request,
+    exc: StarletteHTTPException
+):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "status": exc.status_code,
+            "error": exc.detail
+        }
+    )
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(
+    request: Request,
+    exc: RequestValidationError
+):
+    return JSONResponse(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        content={
+            "status": 400,
+            "error": "Erro de validação nos dados enviados.",
+            "details": exc.errors()
+        }
+    )
+
+
 app.include_router(profiles.router)
 app.include_router(technologies.router)
 app.include_router(projects.router)
