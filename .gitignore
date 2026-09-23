@@ -1,0 +1,27 @@
+# Ambientes Virtuais
+.venv/
+venv/
+env/
+
+# Arquivos de Cache do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Banco de Dados Local SQLite
+# (Não devemos subir o banco de dados pro GitHub!)
+devshowcase.db
+*.sqlite3
+*.db
+
+# Arquivos de SO
+.DS_Store
+Thumbs.db
+
+# Configurações do VS Code (Opcional, mas boa prática)
+.vscode/
+
+# Variáveis de Ambiente
+.env
